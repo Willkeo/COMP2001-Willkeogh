@@ -1,7 +1,20 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\Will\\Documents\\GitHub\\COMP2001-Willkeogh\\COMP 2001 Trail Service\\",
-  "Documents": [],
+  "WorkspaceRootPath": "C:\\Users\\Willk\\Documents\\GitHub\\COMP2001-Willkeogh\\COMP 2001 Trail Service\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{F96932D9-02CC-4283-A68C-7EDD3CA5B456}|COMP 2001 Trail Service.pyproj|C:\\Users\\Willk\\Documents\\GitHub\\COMP2001-Willkeogh\\COMP 2001 Trail Service\\COMP_2001_Trail_Service\\views.py||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{F96932D9-02CC-4283-A68C-7EDD3CA5B456}|COMP 2001 Trail Service.pyproj|solutionrelative:COMP_2001_Trail_Service\\views.py||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F96932D9-02CC-4283-A68C-7EDD3CA5B456}|COMP 2001 Trail Service.pyproj|C:\\Users\\Willk\\Documents\\GitHub\\COMP2001-Willkeogh\\COMP 2001 Trail Service\\COMP_2001_Trail_Service\\__init__.py||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{F96932D9-02CC-4283-A68C-7EDD3CA5B456}|COMP 2001 Trail Service.pyproj|solutionrelative:COMP_2001_Trail_Service\\__init__.py||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F96932D9-02CC-4283-A68C-7EDD3CA5B456}|COMP 2001 Trail Service.pyproj|C:\\Users\\Willk\\Documents\\GitHub\\COMP2001-Willkeogh\\COMP 2001 Trail Service\\COMP_2001_Trail_Service\\models.py||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{F96932D9-02CC-4283-A68C-7EDD3CA5B456}|COMP 2001 Trail Service.pyproj|solutionrelative:COMP_2001_Trail_Service\\models.py||{8B382828-6202-11D1-8870-0000F87579D2}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,11 +22,46 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 2,
           "Children": [
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "models.py",
+              "DocumentMoniker": "C:\\Users\\Willk\\Documents\\GitHub\\COMP2001-Willkeogh\\COMP 2001 Trail Service\\COMP_2001_Trail_Service\\models.py",
+              "RelativeDocumentMoniker": "COMP_2001_Trail_Service\\models.py",
+              "ToolTip": "C:\\Users\\Willk\\Documents\\GitHub\\COMP2001-Willkeogh\\COMP 2001 Trail Service\\COMP_2001_Trail_Service\\models.py",
+              "RelativeToolTip": "COMP_2001_Trail_Service\\models.py",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAAAEYAAABEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
+              "WhenOpened": "2024-12-10T17:41:50.388Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "__init__.py (COMP_2001_Trail_Service)",
+              "DocumentMoniker": "C:\\Users\\Willk\\Documents\\GitHub\\COMP2001-Willkeogh\\COMP 2001 Trail Service\\COMP_2001_Trail_Service\\__init__.py",
+              "RelativeDocumentMoniker": "COMP_2001_Trail_Service\\__init__.py",
+              "ToolTip": "C:\\Users\\Willk\\Documents\\GitHub\\COMP2001-Willkeogh\\COMP 2001 Trail Service\\COMP_2001_Trail_Service\\__init__.py",
+              "RelativeToolTip": "COMP_2001_Trail_Service\\__init__.py",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
+              "WhenOpened": "2024-12-10T15:10:12.2Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "views.py",
+              "DocumentMoniker": "C:\\Users\\Willk\\Documents\\GitHub\\COMP2001-Willkeogh\\COMP 2001 Trail Service\\COMP_2001_Trail_Service\\views.py",
+              "RelativeDocumentMoniker": "COMP_2001_Trail_Service\\views.py",
+              "ToolTip": "C:\\Users\\Willk\\Documents\\GitHub\\COMP2001-Willkeogh\\COMP 2001 Trail Service\\COMP_2001_Trail_Service\\views.py",
+              "RelativeToolTip": "COMP_2001_Trail_Service\\views.py",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAK4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
+              "WhenOpened": "2024-12-10T14:50:49.176Z",
+              "EditorCaption": ""
             }
           ]
         }
