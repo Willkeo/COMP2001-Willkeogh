@@ -1,239 +1,199 @@
 from flask import Flask, request, jsonify
 from COMP_2001_Trail_Service import db
-from COMP_2001_Trail_Service.models import User, Trail, Feature, TrailFeature, TrailCreationLog
+from sqlalchemy import text
 
 app = Flask(__name__)
 
-
 @app.route('/users', methods=['GET'])
 def get_users():
-    users = User.query.all()
-    users_list = [
-        {
-            "UserID": user.UserID,
-            "Username": user.Username,
-            "Email": user.Email,
-            "UserRole": user.UserRole
-        } for user in users
-    ]
-    return jsonify(users_list)
+    try:
+        query = text("EXEC CW2_ReadUser")
+        result = db.session.execute(query)
+        users = [dict(row) for row in result]
+        return jsonify(users)
+    except Exception as e:
+        return jsonify({"message": "Cant fetch users", "error": str(e)}), 500
 
-@app.route('/users/<user_id>', methods=['GET'])
-def get_user(user_id):
-    user = User.query.filter_by(UserID=user_id).first()
-    if user:
-        user_data = {
-            "UserID": user.UserID,
-            "Username": user.Username,
-            "Email": user.Email,
-            "UserRole": user.UserRole
-        }
-        return jsonify(user_data)
-    else:
-        return jsonify({"message": "User not found"}), 404
 
 @app.route('/users', methods=['POST'])
 def create_user():
-    data = request.get_json()
-    new_user = User(
-        UserID=data['UserID'],
-        Username=data['Username'],
-        Email=data['Email'],
-        Password=data['Password'],
-        UserRole=data['UserRole']
-    )
-    db.session.add(new_user)
-    db.session.commit()
-    return jsonify({"message": "User created successfully!"}), 201
+    try:
+        data = request.get_json()
+        query = text("EXEC CW2_CreateUser :UserID, :Username, :Email, :Password, :UserRole")
+        db.session.execute(query, {
+            'UserID': data['UserID'],
+            'Username': data['Username'],
+            'Email': data['Email'],
+            'Password': data['Password'],
+            'UserRole': data['UserRole']
+        })
+        db.session.commit()
+        return jsonify({"message": "User created successfully!"}), 201
+    except Exception as e:
+        return jsonify({"message": "Cant create user", "error": str(e)}), 500
+
 
 @app.route('/users/<user_id>', methods=['PUT'])
 def update_user(user_id):
-    user = User.query.filter_by(UserID=user_id).first()
-    if user:
+    try:
         data = request.get_json()
-        user.Username = data['Username']
-        user.Email = data['Email']
-        user.Password = data['Password']
-        user.UserRole = data['UserRole']
+        query = text("""
+            EXEC CW2_UpdateUser :UserID, :Username, :Email, :Password, :UserRole
+        """)
+        db.session.execute(query, {
+            'UserID': user_id,
+            'Username': data['Username'],
+            'Email': data['Email'],
+            'Password': data['Password'],
+            'UserRole': data['UserRole']
+        })
         db.session.commit()
         return jsonify({"message": "User updated successfully!"})
-    else:
-        return jsonify({"message": "User not found"}), 404
+    except Exception as e:
+        return jsonify({"message": "Cant update user", "error": str(e)}), 500
+
 
 @app.route('/users/<user_id>', methods=['DELETE'])
 def delete_user(user_id):
-    user = User.query.filter_by(UserID=user_id).first()
-    if user:
-        db.session.delete(user)
+    try:
+        query = text("EXEC CW2_DeleteUser :UserID")
+        db.session.execute(query, {'UserID': user_id})
         db.session.commit()
         return jsonify({"message": "User deleted successfully!"})
-    else:
-        return jsonify({"message": "User not found"}), 404
+    except Exception as e:
+        return jsonify({"message": "Create delete user", "error": str(e)}), 500
+
 
 @app.route('/trails', methods=['GET'])
 def get_trails():
-    trails = Trail.query.all()
-    trails_list = [
-        {
-            "TrailID": trail.TrailID,
-            "TrailName": trail.TrailName,
-            "TrailSummary": trail.TrailSummary,
-            "Difficulty": trail.Difficulty
-        } for trail in trails
-    ]
-    return jsonify(trails_list)
+    try:
+        query = text("EXEC CW2_ReadTrail")
+        result = db.session.execute(query)
+        trails = [dict(row) for row in result]
+        return jsonify(trails)
+    except Exception as e:
+        return jsonify({"message": "Cant fetch trails", "error": str(e)}), 500
 
-@app.route('/trails/<trail_id>', methods=['GET'])
-def get_trail(trail_id):
-    trail = Trail.query.filter_by(TrailID=trail_id).first()
-    if trail:
-        trail_data = {
-            "TrailID": trail.TrailID,
-            "TrailName": trail.TrailName,
-            "TrailSummary": trail.TrailSummary,
-            "TrailDescription": trail.TrailDescription,
-            "Difficulty": trail.Difficulty
-        }
-        return jsonify(trail_data)
-    else:
-        return jsonify({"message": "Trail not found"}), 404
 
 @app.route('/trails', methods=['POST'])
 def create_trail():
-    data = request.get_json()
-    new_trail = Trail(
-        TrailID=data['TrailID'],
-        TrailName=data['TrailName'],
-        TrailSummary=data['TrailSummary'],
-        Difficulty=data['Difficulty'],
-        Location=data['Location'],
-        Distance=data['Distance'],
-        ElevationGain=data.get('ElevationGain'),
-        RouteType=data.get('RouteType'),
-        OwnedBy=data.get('OwnedBy'),
-        Rating=data.get('Rating'),
-        EstimatedTime=data.get('EstimatedTime'),
-        Pt1_Lat=data.get('Pt1_Lat'),
-        Pt1_Long=data.get('Pt1_Long'),
-        Pt1_Desc=data.get('Pt1_Desc'),
-        Pt2_Lat=data.get('Pt2_Lat'),
-        Pt2_Long=data.get('Pt2_Long'),
-        Pt2_Desc=data.get('Pt2_Desc'),
-        Pt3_Lat=data.get('Pt3_Lat'),
-        Pt3_Long=data.get('Pt3_Long'),
-        Pt3_Desc=data.get('Pt3_Desc'),
-        Pt4_Lat=data.get('Pt4_Lat'),
-        Pt4_Long=data.get('Pt4_Long'),
-        Pt4_Desc=data.get('Pt4_Desc'),
-        Pt5_Lat=data.get('Pt5_Lat'),
-        Pt5_Long=data.get('Pt5_Long'),
-        Pt5_Desc=data.get('Pt5_Desc')
-    )
-    db.session.add(new_trail)
-    db.session.commit()
-    return jsonify({"message": "Trail created successfully!"}), 201
+    try:
+        data = request.get_json()
+        query = text("""
+            EXEC CW2_CreateTrail 
+            :TrailID, :TrailName, :TrailSummary, :Difficulty, :Location, :Distance
+        """)
+        db.session.execute(query, {
+            'TrailID': data['TrailID'],
+            'TrailName': data['TrailName'],
+            'TrailSummary': data['TrailSummary'],
+            'Difficulty': data['Difficulty'],
+            'Location': data['Location'],
+            'Distance': data['Distance']
+        })
+        db.session.commit()
+        return jsonify({"message": "Trail created successfully!"}), 201
+    except Exception as e:
+        return jsonify({"message": "Cant create trail", "error": str(e)}), 500
 
 
 @app.route('/trails/<trail_id>', methods=['PUT'])
 def update_trail(trail_id):
-    trail = Trail.query.filter_by(TrailID=trail_id).first()
-    if trail:
+    try:
         data = request.get_json()
-        
-        trail.TrailName = data['TrailName']
-        trail.TrailSummary = data['TrailSummary']
-        trail.TrailDescription = data['TrailDescription']
-        trail.Difficulty = data['Difficulty']
-        trail.Location = data['Location']
-        trail.Distance = data['Distance']
-        trail.ElevationGain = data.get('ElevationGain', trail.ElevationGain)
-        trail.RouteType = data.get('RouteType', trail.RouteType)
-        trail.OwnedBy = data.get('OwnedBy', trail.OwnedBy)
-        trail.Rating = data.get('Rating', trail.Rating)
-        trail.EstimatedTime = data.get('EstimatedTime', trail.EstimatedTime)
-        trail.Pt1_Lat = data.get('Pt1_Lat', trail.Pt1_Lat)
-        trail.Pt1_Long = data.get('Pt1_Long', trail.Pt1_Long)
-        trail.Pt1_Desc = data.get('Pt1_Desc', trail.Pt1_Desc)
-        trail.Pt2_Lat = data.get('Pt2_Lat', trail.Pt2_Lat)
-        trail.Pt2_Long = data.get('Pt2_Long', trail.Pt2_Long)
-        trail.Pt2_Desc = data.get('Pt2_Desc', trail.Pt2_Desc)
-        trail.Pt3_Lat = data.get('Pt3_Lat', trail.Pt3_Lat)
-        trail.Pt3_Long = data.get('Pt3_Long', trail.Pt3_Long)
-        trail.Pt3_Desc = data.get('Pt3_Desc', trail.Pt3_Desc)
-        trail.Pt4_Lat = data.get('Pt4_Lat', trail.Pt4_Lat)
-        trail.Pt4_Long = data.get('Pt4_Long', trail.Pt4_Long)
-        trail.Pt4_Desc = data.get('Pt4_Desc', trail.Pt4_Desc)
-        trail.Pt5_Lat = data.get('Pt5_Lat', trail.Pt5_Lat)
-        trail.Pt5_Long = data.get('Pt5_Long', trail.Pt5_Long)
-        trail.Pt5_Desc = data.get('Pt5_Desc', trail.Pt5_Desc)
-
+        query = text("""
+            EXEC CW2_UpdateTrail 
+            :TrailID, :TrailName, :TrailSummary, :Difficulty, :Location, :Distance
+        """)
+        db.session.execute(query, {
+            'TrailID': trail_id,
+            'TrailName': data['TrailName'],
+            'TrailSummary': data['TrailSummary'],
+            'Difficulty': data['Difficulty'],
+            'Location': data['Location'],
+            'Distance': data['Distance']
+        })
         db.session.commit()
         return jsonify({"message": "Trail updated successfully!"})
-    else:
-        return jsonify({"message": "Trail not found"}), 404
+    except Exception as e:
+        return jsonify({"message": "Cant update trail", "error": str(e)}), 500
+
 
 @app.route('/trails/<trail_id>', methods=['DELETE'])
 def delete_trail(trail_id):
-    trail = Trail.query.filter_by(TrailID=trail_id).first()
-    if trail:
-        db.session.delete(trail)
+    try:
+        query = text("EXEC CW2_DeleteTrail :TrailID")
+        db.session.execute(query, {'TrailID': trail_id})
         db.session.commit()
         return jsonify({"message": "Trail deleted successfully!"})
-    else:
-        return jsonify({"message": "Trail not found"}), 404
+    except Exception as e:
+        return jsonify({"message": "Cant delete trail", "error": str(e)}), 500
+
 
 @app.route('/features', methods=['GET'])
 def get_features():
-    features = Feature.query.all()
-    features_list = [
-        {
-            "TrailFeatureID": feature.TrailFeatureID,
-            "TrailFeature": feature.TrailFeature
-        } for feature in features
-    ]
-    return jsonify(features_list)
+    try:
+        query = text("EXEC CW2_ReadFeature")
+        result = db.session.execute(query)
+        features = [dict(row) for row in result]
+        return jsonify(features)
+    except Exception as e:
+        return jsonify({"message": "Cant fetch features", "error": str(e)}), 500
+
 
 @app.route('/features', methods=['POST'])
 def create_feature():
-    data = request.get_json()
-    new_feature = Feature(
-        TrailFeature=data['TrailFeature']
-    )
-    db.session.add(new_feature)
-    db.session.commit()
-    return jsonify({"message": "Feature created successfully!"}), 201
+    try:
+        data = request.get_json()
+        query = text("EXEC CW2_CreateFeature :TrailFeatureID, :TrailFeature")
+        db.session.execute(query, {
+            'TrailFeatureID': data['TrailFeatureID'],
+            'TrailFeature': data['TrailFeature']
+        })
+        db.session.commit()
+        return jsonify({"message": "Feature created successfully!"}), 201
+    except Exception as e:
+        return jsonify({"message": "Cant create feature", "error": str(e)}), 500
+
 
 @app.route('/trailfeatures', methods=['GET'])
 def get_trail_features():
-    trail_features = TrailFeature.query.all()
-    trail_features_list = [
-        {
-            "TrailID": trail_feature.TrailID,
-            "TrailFeatureID": trail_feature.TrailFeatureID
-        } for trail_feature in trail_features
-    ]
-    return jsonify(trail_features_list)
+    try:
+        query = text("EXEC CW2_ReadTrailFeature")
+        result = db.session.execute(query)
+        trail_features = [dict(row) for row in result]
+        return jsonify(trail_features)
+    except Exception as e:
+        return jsonify({"message": "Cant fetch trail features", "error": str(e)}), 500
+
 
 @app.route('/trailfeatures', methods=['POST'])
 def add_trail_feature():
-    data = request.get_json()
-    trail_feature = TrailFeature(
-        TrailID=data['TrailID'],
-        TrailFeatureID=data['TrailFeatureID']
-    )
-    db.session.add(trail_feature)
-    db.session.commit()
-    return jsonify({"message": "Trail feature added successfully!"}), 201
+    try:
+        data = request.get_json()
+        query = text("EXEC CW2_CreateTrailFeature :TrailID, :TrailFeatureID")
+        db.session.execute(query, {
+            'TrailID': data['TrailID'],
+            'TrailFeatureID': data['TrailFeatureID']
+        })
+        db.session.commit()
+        return jsonify({"message": "Trail feature added successfully!"}), 201
+    except Exception as e:
+        return jsonify({"message": "Create add trail feature", "error": str(e)}), 500
+
 
 @app.route('/trailfeatures/<trail_id>/<feature_id>', methods=['DELETE'])
 def delete_trail_feature(trail_id, feature_id):
-    trail_feature = TrailFeature.query.filter_by(TrailID=trail_id, TrailFeatureID=feature_id).first()
-    if trail_feature:
-        db.session.delete(trail_feature)
+    try:
+        query = text("EXEC CW2_DeleteTrailFeature :TrailID, :TrailFeatureID")
+        db.session.execute(query, {
+            'TrailID': trail_id,
+            'TrailFeatureID': feature_id
+        })
         db.session.commit()
-        return jsonify({"message": "Trail feature removed successfully!"})
-    else:
-        return jsonify({"message": "Trail feature not found"}), 404
+        return jsonify({"message": "Trail feature deleted successfully!"})
+    except Exception as e:
+        return jsonify({"message": "Create delete trail feature", "error": str(e)}), 500
 
 
 if __name__ == '__main__':

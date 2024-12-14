@@ -1,6 +1,3 @@
-"""
-This script runs the COMP_2001_Trail_Service application using a development server.
-"""
 
 from os import environ
 from COMP_2001_Trail_Service import app

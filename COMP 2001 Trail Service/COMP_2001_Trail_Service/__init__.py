@@ -4,13 +4,11 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from dotenv import load_dotenv
 
+load_dotenv()
+
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = (
-    "mssql+pyodbc://WKeogh:BfcK306+@DIST-6-505.uopnet.plymouth.ac.uk/COMP2001_WKeogh"
-    "?driver=ODBC+Driver+17+for+SQL+Server"
-)
-
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  
 
 db = SQLAlchemy(app)
@@ -23,8 +21,12 @@ with app.app_context():
     except Exception as e:
         print("Error connecting to the database:", e)
 
-load_dotenv()  
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+print("Registered Routes:")
+for rule in app.url_map.iter_rules():
+    print(rule)
 
 from COMP_2001_Trail_Service import views
 from COMP_2001_Trail_Service import models
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0', port=5555)
