@@ -1,11 +1,15 @@
 from flask import Flask, request, jsonify
 from COMP_2001_Trail_Service import db
+from COMP_2001_Trail_Service import app
 from sqlalchemy import text
 
 app = Flask(__name__)
 
+print("views.py loaded!")
+
 @app.route('/users', methods=['GET'])
 def get_users():
+    return jsonify({"message": "Test route is working"})
     try:
         query = text("EXEC CW2_ReadUser")
         result = db.session.execute(query)
@@ -195,6 +199,9 @@ def delete_trail_feature(trail_id, feature_id):
     except Exception as e:
         return jsonify({"message": "Create delete trail feature", "error": str(e)}), 500
 
+print("Routes registered in views.py:")
+for rule in app.url_map.iter_rules():
+   print(rule)
 
 if __name__ == '__main__':
     app.run(debug=True)

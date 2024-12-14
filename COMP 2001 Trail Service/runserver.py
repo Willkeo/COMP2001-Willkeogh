@@ -1,6 +1,7 @@
 
 from os import environ
 from COMP_2001_Trail_Service import app
+from COMP_2001_Trail_Service import views
 
 if __name__ == '__main__':
     HOST = environ.get('SERVER_HOST', 'localhost')

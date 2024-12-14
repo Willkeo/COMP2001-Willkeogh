@@ -1,4 +1,5 @@
 from COMP_2001_Trail_Service import db
+from COMP_2001_Trail_Service import app
 
 class User(db.Model):
     __tablename__ = 'User'

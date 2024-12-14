@@ -17,6 +17,7 @@ migrate = Migrate(app, db)
 with app.app_context():
     try:
         db.engine.connect() 
+        print(app.url_map)
         print("Database connected successfully!")
     except Exception as e:
         print("Error connecting to the database:", e)
