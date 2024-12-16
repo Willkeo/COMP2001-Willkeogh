@@ -70,3 +70,7 @@ class TrailCreationLog(db.Model):
     TrailID = db.Column(db.String(10), db.ForeignKey('Trail.TrailID'))
     UserID = db.Column(db.String(10), db.ForeignKey('User.UserID'))
     CreatedTimestamp = db.Column(db.DateTime, default=db.func.now())
+
+with app.app_context():
+    print("Registered Tables in SQLAlchemy:")
+    print(db.metadata.tables.keys())

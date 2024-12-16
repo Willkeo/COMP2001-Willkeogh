@@ -22,10 +22,6 @@ with app.app_context():
     except Exception as e:
         print("Error connecting to the database:", e)
 
-print("Registered Routes:")
-for rule in app.url_map.iter_rules():
-    print(rule)
-
 from COMP_2001_Trail_Service import views
 from COMP_2001_Trail_Service import models
 

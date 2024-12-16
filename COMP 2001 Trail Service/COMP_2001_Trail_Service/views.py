@@ -3,38 +3,39 @@ from COMP_2001_Trail_Service import db
 from COMP_2001_Trail_Service import app
 from sqlalchemy import text
 
-app = Flask(__name__)
 
-print("views.py loaded!")
 
 @app.route('/users', methods=['GET'])
-def get_users():
-    return jsonify({"message": "Test route is working"})
+def get_user_by_id():
     try:
-        query = text("EXEC CW2_ReadUser")
-        result = db.session.execute(query)
+        user_id = request.args.get('UserID')
+        if not user_id:
+            return jsonify({"message": "UserID is required"}), 400
+
+        query = text("EXEC [CW2].[ReadUser] @UserID = :UserID")
+        result = db.session.execute(query, {'UserID': user_id})
         users = [dict(row) for row in result]
-        return jsonify(users)
+        return jsonify(users), 200
     except Exception as e:
-        return jsonify({"message": "Cant fetch users", "error": str(e)}), 500
+        return jsonify({"message": "Cannot fetch user", "error": str(e)}), 500
 
 
 @app.route('/users', methods=['POST'])
 def create_user():
     try:
         data = request.get_json()
-        query = text("EXEC CW2_CreateUser :UserID, :Username, :Email, :Password, :UserRole")
-        db.session.execute(query, {
-            'UserID': data['UserID'],
-            'Username': data['Username'],
-            'Email': data['Email'],
-            'Password': data['Password'],
-            'UserRole': data['UserRole']
-        })
+        if not all(key in data for key in ['UserID', 'Username', 'Email', 'Password', 'UserRole']):
+            return jsonify({"message": "All user fields are required"}), 400
+
+        query = text("""
+            EXEC [CW2].[CreateUser] 
+            @UserID = :UserID, @Username = :Username, @Email = :Email, @Password = :Password, @UserRole = :UserRole
+        """)
+        db.session.execute(query, data)
         db.session.commit()
         return jsonify({"message": "User created successfully!"}), 201
     except Exception as e:
-        return jsonify({"message": "Cant create user", "error": str(e)}), 500
+        return jsonify({"message": "Cannot create user", "error": str(e)}), 500
 
 
 @app.route('/users/<user_id>', methods=['PUT'])
@@ -42,63 +43,61 @@ def update_user(user_id):
     try:
         data = request.get_json()
         query = text("""
-            EXEC CW2_UpdateUser :UserID, :Username, :Email, :Password, :UserRole
+            EXEC [CW2].[UpdateUser] 
+            @UserID = :UserID, @Username = :Username, @Email = :Email, @Password = :Password, @UserRole = :UserRole
         """)
         db.session.execute(query, {
             'UserID': user_id,
-            'Username': data['Username'],
-            'Email': data['Email'],
-            'Password': data['Password'],
-            'UserRole': data['UserRole']
+            **data
         })
         db.session.commit()
-        return jsonify({"message": "User updated successfully!"})
+        return jsonify({"message": "User updated successfully!"}), 200
     except Exception as e:
-        return jsonify({"message": "Cant update user", "error": str(e)}), 500
+        return jsonify({"message": "Cannot update user", "error": str(e)}), 500
 
 
 @app.route('/users/<user_id>', methods=['DELETE'])
 def delete_user(user_id):
     try:
-        query = text("EXEC CW2_DeleteUser :UserID")
+        query = text("EXEC [CW2].[DeleteUser] @UserID = :UserID")
         db.session.execute(query, {'UserID': user_id})
         db.session.commit()
-        return jsonify({"message": "User deleted successfully!"})
+        return jsonify({"message": "User deleted successfully!"}), 200
     except Exception as e:
-        return jsonify({"message": "Create delete user", "error": str(e)}), 500
-
+        return jsonify({"message": "Cannot delete user", "error": str(e)}), 500
 
 @app.route('/trails', methods=['GET'])
-def get_trails():
+def get_trail_by_id():
     try:
-        query = text("EXEC CW2_ReadTrail")
-        result = db.session.execute(query)
+        trail_id = request.args.get('TrailID')
+        if not trail_id:
+            return jsonify({"message": "TrailID is required"}), 400
+
+        query = text("EXEC [CW2].[ReadTrail] @TrailID = :TrailID")
+        result = db.session.execute(query, {'TrailID': trail_id})
         trails = [dict(row) for row in result]
-        return jsonify(trails)
+        return jsonify(trails), 200
     except Exception as e:
-        return jsonify({"message": "Cant fetch trails", "error": str(e)}), 500
+        return jsonify({"message": "Cannot fetch trail", "error": str(e)}), 500
 
 
 @app.route('/trails', methods=['POST'])
 def create_trail():
     try:
         data = request.get_json()
+        if not all(key in data for key in ['TrailID', 'TrailName', 'TrailSummary', 'Difficulty', 'Location', 'Distance']):
+            return jsonify({"message": "All trail fields are required"}), 400
+
         query = text("""
-            EXEC CW2_CreateTrail 
-            :TrailID, :TrailName, :TrailSummary, :Difficulty, :Location, :Distance
+            EXEC [CW2].[CreateTrail] 
+            @TrailID = :TrailID, @TrailName = :TrailName, @TrailSummary = :TrailSummary,
+            @Difficulty = :Difficulty, @Location = :Location, @Distance = :Distance
         """)
-        db.session.execute(query, {
-            'TrailID': data['TrailID'],
-            'TrailName': data['TrailName'],
-            'TrailSummary': data['TrailSummary'],
-            'Difficulty': data['Difficulty'],
-            'Location': data['Location'],
-            'Distance': data['Distance']
-        })
+        db.session.execute(query, data)
         db.session.commit()
         return jsonify({"message": "Trail created successfully!"}), 201
     except Exception as e:
-        return jsonify({"message": "Cant create trail", "error": str(e)}), 500
+        return jsonify({"message": "Cannot create trail", "error": str(e)}), 500
 
 
 @app.route('/trails/<trail_id>', methods=['PUT'])
@@ -106,102 +105,61 @@ def update_trail(trail_id):
     try:
         data = request.get_json()
         query = text("""
-            EXEC CW2_UpdateTrail 
-            :TrailID, :TrailName, :TrailSummary, :Difficulty, :Location, :Distance
+            EXEC [CW2].[UpdateTrail] 
+            @TrailID = :TrailID, @TrailName = :TrailName, @TrailSummary = :TrailSummary,
+            @Difficulty = :Difficulty, @Location = :Location, @Distance = :Distance
         """)
         db.session.execute(query, {
             'TrailID': trail_id,
-            'TrailName': data['TrailName'],
-            'TrailSummary': data['TrailSummary'],
-            'Difficulty': data['Difficulty'],
-            'Location': data['Location'],
-            'Distance': data['Distance']
+            **data
         })
         db.session.commit()
-        return jsonify({"message": "Trail updated successfully!"})
+        return jsonify({"message": "Trail updated successfully!"}), 200
     except Exception as e:
-        return jsonify({"message": "Cant update trail", "error": str(e)}), 500
+        return jsonify({"message": "Cannot update trail", "error": str(e)}), 500
 
 
 @app.route('/trails/<trail_id>', methods=['DELETE'])
 def delete_trail(trail_id):
     try:
-        query = text("EXEC CW2_DeleteTrail :TrailID")
+        query = text("EXEC [CW2].[DeleteTrail] @TrailID = :TrailID")
         db.session.execute(query, {'TrailID': trail_id})
         db.session.commit()
-        return jsonify({"message": "Trail deleted successfully!"})
+        return jsonify({"message": "Trail deleted successfully!"}), 200
     except Exception as e:
-        return jsonify({"message": "Cant delete trail", "error": str(e)}), 500
+        return jsonify({"message": "Cannot delete trail", "error": str(e)}), 500
 
 
 @app.route('/features', methods=['GET'])
-def get_features():
+def get_feature_by_id():
     try:
-        query = text("EXEC CW2_ReadFeature")
-        result = db.session.execute(query)
+        feature_id = request.args.get('TrailFeatureID')
+        if not feature_id:
+            return jsonify({"message": "TrailFeatureID is required"}), 400
+
+        query = text("EXEC [CW2].[ReadFeature] @TrailFeatureID = :TrailFeatureID")
+        result = db.session.execute(query, {'TrailFeatureID': feature_id})
         features = [dict(row) for row in result]
-        return jsonify(features)
+        return jsonify(features), 200
     except Exception as e:
-        return jsonify({"message": "Cant fetch features", "error": str(e)}), 500
+        return jsonify({"message": "Cannot fetch feature", "error": str(e)}), 500
 
 
 @app.route('/features', methods=['POST'])
 def create_feature():
     try:
         data = request.get_json()
-        query = text("EXEC CW2_CreateFeature :TrailFeatureID, :TrailFeature")
-        db.session.execute(query, {
-            'TrailFeatureID': data['TrailFeatureID'],
-            'TrailFeature': data['TrailFeature']
-        })
+        query = text("EXEC [CW2].[CreateFeature] @TrailFeatureID = :TrailFeatureID, @TrailFeature = :TrailFeature")
+        db.session.execute(query, data)
         db.session.commit()
         return jsonify({"message": "Feature created successfully!"}), 201
     except Exception as e:
-        return jsonify({"message": "Cant create feature", "error": str(e)}), 500
+        return jsonify({"message": "Cannot create feature", "error": str(e)}), 500
 
-
-@app.route('/trailfeatures', methods=['GET'])
-def get_trail_features():
-    try:
-        query = text("EXEC CW2_ReadTrailFeature")
-        result = db.session.execute(query)
-        trail_features = [dict(row) for row in result]
-        return jsonify(trail_features)
-    except Exception as e:
-        return jsonify({"message": "Cant fetch trail features", "error": str(e)}), 500
-
-
-@app.route('/trailfeatures', methods=['POST'])
-def add_trail_feature():
-    try:
-        data = request.get_json()
-        query = text("EXEC CW2_CreateTrailFeature :TrailID, :TrailFeatureID")
-        db.session.execute(query, {
-            'TrailID': data['TrailID'],
-            'TrailFeatureID': data['TrailFeatureID']
-        })
-        db.session.commit()
-        return jsonify({"message": "Trail feature added successfully!"}), 201
-    except Exception as e:
-        return jsonify({"message": "Create add trail feature", "error": str(e)}), 500
-
-
-@app.route('/trailfeatures/<trail_id>/<feature_id>', methods=['DELETE'])
-def delete_trail_feature(trail_id, feature_id):
-    try:
-        query = text("EXEC CW2_DeleteTrailFeature :TrailID, :TrailFeatureID")
-        db.session.execute(query, {
-            'TrailID': trail_id,
-            'TrailFeatureID': feature_id
-        })
-        db.session.commit()
-        return jsonify({"message": "Trail feature deleted successfully!"})
-    except Exception as e:
-        return jsonify({"message": "Create delete trail feature", "error": str(e)}), 500
 
 print("Routes registered in views.py:")
 for rule in app.url_map.iter_rules():
-   print(rule)
+    print(rule)
 
 if __name__ == '__main__':
     app.run(debug=True)
