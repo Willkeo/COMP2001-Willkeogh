@@ -80,16 +80,40 @@ def get_trail_by_id(trail_id):
 def create_trail():
     try:
         data = request.get_json()
-        if not all(key in data for key in ['TrailID', 'TrailName', 'TrailSummary', 'Difficulty', 'Location', 'Distance']):
-            return jsonify({"message": "All trail fields are required"}), 400
+        
+        required_fields = [
+            'TrailID', 'TrailName', 'TrailSummary', 'TrailDescription', 
+            'Difficulty', 'Location', 'Distance', 'ElevationGain', 'RouteType', 
+            'OwnedBy', 'Rating', 'EstimatedTime',
+            'Pt1_Desc', 'Pt1_Lat', 'Pt1_Long',
+            'Pt2_Desc', 'Pt2_Lat', 'Pt2_Long',
+            'Pt3_Desc', 'Pt3_Lat', 'Pt3_Long',
+            'Pt4_Desc', 'Pt4_Lat', 'Pt4_Long',
+            'Pt5_Desc', 'Pt5_Lat', 'Pt5_Long'
+        ]
+
+        if not all(key in data for key in required_fields):
+            return jsonify({"message": "All trail and coordinate fields are required"}), 400
+
+        data['UserID'] = data['OwnedBy'] 
 
         query = text("""
             EXEC [CW2].[CreateTrail] 
             @TrailID = :TrailID, @TrailName = :TrailName, @TrailSummary = :TrailSummary,
-            @Difficulty = :Difficulty, @Location = :Location, @Distance = :Distance
+            @TrailDescription = :TrailDescription, @Difficulty = :Difficulty, 
+            @Location = :Location, @Distance = :Distance, @ElevationGain = :ElevationGain, 
+            @RouteType = :RouteType, @OwnedBy = :OwnedBy, @Rating = :Rating, 
+            @EstimatedTime = :EstimatedTime,
+            @Pt1_Desc = :Pt1_Desc, @Pt1_Lat = :Pt1_Lat, @Pt1_Long = :Pt1_Long,
+            @Pt2_Desc = :Pt2_Desc, @Pt2_Lat = :Pt2_Lat, @Pt2_Long = :Pt2_Long,
+            @Pt3_Desc = :Pt3_Desc, @Pt3_Lat = :Pt3_Lat, @Pt3_Long = :Pt3_Long,
+            @Pt4_Desc = :Pt4_Desc, @Pt4_Lat = :Pt4_Lat, @Pt4_Long = :Pt4_Long,
+            @Pt5_Desc = :Pt5_Desc, @Pt5_Lat = :Pt5_Lat, @Pt5_Long = :Pt5_Long
         """)
+
         db.session.execute(query, data)
         db.session.commit()
+
         return jsonify({"message": "Trail created successfully!"}), 201
     except Exception as e:
         return jsonify({"message": "Cant create trail", "error": str(e)}), 500
@@ -99,16 +123,43 @@ def create_trail():
 def update_trail(trail_id):
     try:
         data = request.get_json()
+        
+        required_fields = [
+            'TrailName', 'TrailSummary', 'TrailDescription', 
+            'Difficulty', 'Location', 'Distance', 'ElevationGain', 'RouteType', 
+            'OwnedBy', 'Rating', 'EstimatedTime',
+            'Pt1_Desc', 'Pt1_Lat', 'Pt1_Long',
+            'Pt2_Desc', 'Pt2_Lat', 'Pt2_Long',
+            'Pt3_Desc', 'Pt3_Lat', 'Pt3_Long',
+            'Pt4_Desc', 'Pt4_Lat', 'Pt4_Long',
+            'Pt5_Desc', 'Pt5_Lat', 'Pt5_Long'
+        ]
+
+        if not all(key in data for key in required_fields):
+            return jsonify({"message": "All trail and coordinate fields are required"}), 400
+
+        data['UserID'] = data['OwnedBy'] 
+
         query = text("""
             EXEC [CW2].[UpdateTrail] 
             @TrailID = :TrailID, @TrailName = :TrailName, @TrailSummary = :TrailSummary,
-            @Difficulty = :Difficulty, @Location = :Location, @Distance = :Distance
+            @TrailDescription = :TrailDescription, @Difficulty = :Difficulty, 
+            @Location = :Location, @Distance = :Distance, @ElevationGain = :ElevationGain, 
+            @RouteType = :RouteType, @OwnedBy = :OwnedBy, @Rating = :Rating, 
+            @EstimatedTime = :EstimatedTime,
+            @Pt1_Desc = :Pt1_Desc, @Pt1_Lat = :Pt1_Lat, @Pt1_Long = :Pt1_Long,
+            @Pt2_Desc = :Pt2_Desc, @Pt2_Lat = :Pt2_Lat, @Pt2_Long = :Pt2_Long,
+            @Pt3_Desc = :Pt3_Desc, @Pt3_Lat = :Pt3_Lat, @Pt3_Long = :Pt3_Long,
+            @Pt4_Desc = :Pt4_Desc, @Pt4_Lat = :Pt4_Lat, @Pt4_Long = :Pt4_Long,
+            @Pt5_Desc = :Pt5_Desc, @Pt5_Lat = :Pt5_Lat, @Pt5_Long = :Pt5_Long
         """)
+
         db.session.execute(query, {'TrailID': trail_id, **data})
         db.session.commit()
+
         return jsonify({"message": "Trail updated successfully!"}), 200
     except Exception as e:
-        return jsonify({"message": "Cant update trail", "error": str(e)}), 500
+        return jsonify({"message": "Cannot update trail", "error": str(e)}), 500
 
 
 @app.route('/trails/<trail_id>', methods=['DELETE'])
@@ -136,24 +187,22 @@ def get_feature_by_id(feature_id):
     except Exception as e:
         return jsonify({"message": "Cant fetch feature", "error": str(e)}), 500
 
-
 @app.route('/features', methods=['POST'])
 def create_feature():
     try:
         data = request.get_json()
-        if not all(key in data for key in ['TrailFeatureID', 'TrailFeature']):
-            return jsonify({"message": "All feature fields are required"}), 400
+        if not 'TrailFeature' in data:
+            return jsonify({"message": "TrailFeature field is required"}), 400
 
         query = text("""
             EXEC [CW2].[CreateFeature] 
-            @TrailFeatureID = :TrailFeatureID, @TrailFeature = :TrailFeature
+            @TrailFeature = :TrailFeature
         """)
         db.session.execute(query, data)
         db.session.commit()
         return jsonify({"message": "Feature created successfully!"}), 201
     except Exception as e:
         return jsonify({"message": "Cant create feature", "error": str(e)}), 500
-
 
 @app.route('/features/<feature_id>', methods=['DELETE'])
 def delete_feature(feature_id):

@@ -42,6 +42,7 @@
     <Folder Include="COMP_2001_Trail_Service\templates\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="COMP_2001_Trail_Service\static\swagger.json" />
     <Content Include="requirements.txt" />
     <Content Include="COMP_2001_Trail_Service\static\content\bootstrap.css" />
     <Content Include="COMP_2001_Trail_Service\static\content\bootstrap.min.css" />
