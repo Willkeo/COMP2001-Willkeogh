@@ -17,6 +17,14 @@
     {
       "AbsoluteMoniker": "D:0:0:{F96932D9-02CC-4283-A68C-7EDD3CA5B456}|COMP 2001 Trail Service.pyproj|C:\\Users\\Willk\\Documents\\GitHub\\COMP2001-Willkeogh\\COMP 2001 Trail Service\\COMP_2001_Trail_Service\\models.py||{8B382828-6202-11D1-8870-0000F87579D2}",
       "RelativeMoniker": "D:0:0:{F96932D9-02CC-4283-A68C-7EDD3CA5B456}|COMP 2001 Trail Service.pyproj|solutionrelative:COMP_2001_Trail_Service\\models.py||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F96932D9-02CC-4283-A68C-7EDD3CA5B456}|COMP 2001 Trail Service.pyproj|C:\\Users\\Willk\\Documents\\GitHub\\COMP2001-Willkeogh\\COMP 2001 Trail Service\\requirements.txt||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{F96932D9-02CC-4283-A68C-7EDD3CA5B456}|COMP 2001 Trail Service.pyproj|solutionrelative:requirements.txt||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DAC9F7AD-2106-4F05-9615-D140E7C57597}|Solution Items{DAC9F7AD-2106-4F05-9615-D140E7C57597}|C:\\Users\\Willk\\Documents\\GitHub\\COMP2001-Willkeogh\\COMP 2001 Trail Service\\Dockerfile||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{DAC9F7AD-2106-4F05-9615-D140E7C57597}|Solution Items{DAC9F7AD-2106-4F05-9615-D140E7C57597}|solutionrelative:Dockerfile||{8B382828-6202-11D1-8870-0000F87579D2}"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,11 +34,36 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:1:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "requirements.txt",
+              "DocumentMoniker": "C:\\Users\\Willk\\Documents\\GitHub\\COMP2001-Willkeogh\\COMP 2001 Trail Service\\requirements.txt",
+              "RelativeDocumentMoniker": "requirements.txt",
+              "ToolTip": "C:\\Users\\Willk\\Documents\\GitHub\\COMP2001-Willkeogh\\COMP 2001 Trail Service\\requirements.txt",
+              "RelativeToolTip": "requirements.txt",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACoAAAALAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
+              "WhenOpened": "2024-12-19T00:05:37.009Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Dockerfile",
+              "DocumentMoniker": "C:\\Users\\Willk\\Documents\\GitHub\\COMP2001-Willkeogh\\COMP 2001 Trail Service\\Dockerfile",
+              "RelativeDocumentMoniker": "Dockerfile",
+              "ToolTip": "C:\\Users\\Willk\\Documents\\GitHub\\COMP2001-Willkeogh\\COMP 2001 Trail Service\\Dockerfile",
+              "RelativeToolTip": "Dockerfile",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAeAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2024-12-18T20:10:49.365Z"
             },
             {
               "$type": "Document",
@@ -40,7 +73,7 @@
               "RelativeDocumentMoniker": "runserver.py",
               "ToolTip": "C:\\Users\\Willk\\Documents\\GitHub\\COMP2001-Willkeogh\\COMP 2001 Trail Service\\runserver.py",
               "RelativeToolTip": "runserver.py",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAADcAAAAAAAAAAAAcwJ4AAAAWAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
               "WhenOpened": "2024-12-14T17:07:23.541Z",
               "EditorCaption": ""
@@ -53,7 +86,7 @@
               "RelativeDocumentMoniker": "COMP_2001_Trail_Service\\models.py",
               "ToolTip": "C:\\Users\\Willk\\Documents\\GitHub\\COMP2001-Willkeogh\\COMP 2001 Trail Service\\COMP_2001_Trail_Service\\models.py",
               "RelativeToolTip": "COMP_2001_Trail_Service\\models.py",
-              "ViewState": "AgIAACQAAAAAAAAAAAAAAEsAAAAkAAAAAAAAAA==",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAAAEsAAAAkAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
               "WhenOpened": "2024-12-10T17:41:50.388Z",
               "EditorCaption": ""
@@ -66,7 +99,7 @@
               "RelativeDocumentMoniker": "COMP_2001_Trail_Service\\__init__.py",
               "ToolTip": "C:\\Users\\Willk\\Documents\\GitHub\\COMP2001-Willkeogh\\COMP 2001 Trail Service\\COMP_2001_Trail_Service\\__init__.py",
               "RelativeToolTip": "COMP_2001_Trail_Service\\__init__.py",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAxAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAA1AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
               "WhenOpened": "2024-12-10T15:10:12.2Z",
               "EditorCaption": ""
@@ -79,7 +112,7 @@
               "RelativeDocumentMoniker": "COMP_2001_Trail_Service\\views.py",
               "ToolTip": "C:\\Users\\Willk\\Documents\\GitHub\\COMP2001-Willkeogh\\COMP 2001 Trail Service\\COMP_2001_Trail_Service\\views.py",
               "RelativeToolTip": "COMP_2001_Trail_Service\\views.py",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoBAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAFEAAAAAAAAAAAAAAPIAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
               "WhenOpened": "2024-12-10T14:50:49.176Z",
               "EditorCaption": ""
