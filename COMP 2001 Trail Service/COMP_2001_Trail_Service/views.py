@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from COMP_2001_Trail_Service import db
 from COMP_2001_Trail_Service import app
 from sqlalchemy import text
+from auth import token_required, role_required
 
 @app.route('/users/<user_id>', methods=['GET'])
 def get_user_by_id(user_id):
@@ -37,6 +38,7 @@ def create_user():
 
 
 @app.route('/users/<user_id>', methods=['PUT'])
+@token_required
 def update_user(user_id):
     try:
         data = request.get_json()
@@ -52,6 +54,7 @@ def update_user(user_id):
 
 
 @app.route('/users/<user_id>', methods=['DELETE'])
+@token_required
 def delete_user(user_id):
     try:
         query = text("EXEC [CW2].[DeleteUser] @UserID = :UserID")
@@ -60,6 +63,7 @@ def delete_user(user_id):
         return jsonify({"message": "User deleted successfully!"}), 200
     except Exception as e:
         return jsonify({"message": "Cant delete user", "error": str(e)}), 500
+
 
 @app.route('/trails/<trail_id>', methods=['GET'])
 def get_trail_by_id(trail_id):
@@ -77,6 +81,7 @@ def get_trail_by_id(trail_id):
 
 
 @app.route('/trails', methods=['POST'])
+@token_required
 def create_trail():
     try:
         data = request.get_json()
@@ -120,6 +125,7 @@ def create_trail():
 
 
 @app.route('/trails/<trail_id>', methods=['PUT'])
+@token_required
 def update_trail(trail_id):
     try:
         data = request.get_json()
@@ -163,6 +169,7 @@ def update_trail(trail_id):
 
 
 @app.route('/trails/<trail_id>', methods=['DELETE'])
+@token_required
 def delete_trail(trail_id):
     try:
         query = text("EXEC [CW2].[DeleteTrail] @TrailID = :TrailID")
@@ -188,6 +195,7 @@ def get_feature_by_id(feature_id):
         return jsonify({"message": "Cant fetch feature", "error": str(e)}), 500
 
 @app.route('/features', methods=['POST'])
+@token_required
 def create_feature():
     try:
         data = request.get_json()
@@ -205,6 +213,7 @@ def create_feature():
         return jsonify({"message": "Cant create feature", "error": str(e)}), 500
 
 @app.route('/features/<feature_id>', methods=['DELETE'])
+@token_required
 def delete_feature(feature_id):
     try:
         query = text("EXEC [CW2].[DeleteFeature] @TrailFeatureID = :TrailFeatureID")
@@ -260,6 +269,21 @@ def get_all_features():
         return jsonify(features), 200
     except Exception as e:
         return jsonify({"message": "Cant fetch features", "error": str(e)}), 500
+
+@app.route('/views', methods=['GET'])
+def get_user_trail_view():
+    try:
+        query = text("SELECT * FROM [CW2].[UserTrailView]") 
+        result = db.session.execute(query)
+        
+        UserTrails = [dict(row._mapping) for row in result.fetchall()]
+
+        if not UserTrails:
+            return jsonify({"message": "No user trails found"}), 404
+
+        return jsonify(UserTrails), 200
+    except Exception as e:
+        return jsonify({"message": "Failed to fetch trails from view", "error": str(e)}),
 
 print("Routes registered in views.py:")
 for rule in app.url_map.iter_rules():
