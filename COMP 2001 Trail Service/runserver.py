@@ -7,12 +7,10 @@ import datetime
 from COMP_2001_Trail_Service import app, views
 from auth import token_required, role_required, SECRET_KEY
 
-AUTH_API_URL = "https://web.socem.plymouth.ac.uk/COMP2001/auth/api/users"
-
 api = Api(
     app,
     version='1.0',
-    title='COMP2001 Microservice',
+    title='COMP2001 Microservice by Will Keogh',
     description='API for managing the microservice, users, trails and features.',
     doc='/swagger',
     security='BearerAuth'
@@ -76,45 +74,67 @@ feature_model = api.model('Feature', {
 })
 
 login_model = api.model('Login', {
-    'username': fields.String(required=True, description='The username (email) of the user'),
+    'email': fields.String(required=True, description='The email of the user'),
     'password': fields.String(required=True, description='The password of the user'),
 })
+
+AUTH_API_URL = "https://web.socem.plymouth.ac.uk/COMP2001/auth/api/users"
 
 @auth_ns.route('/login')
 class Login(Resource):
     @auth_ns.doc('user_login')
     @auth_ns.expect(login_model)
     def post(self):
-        """Authenticate user with the Auth API and issue a token"""
+        """Authenticate user with the Auth API and issue a token for API endpoints"""
         data = request.get_json()
-        username = data.get('username')
+        email = data.get('email')
         password = data.get('password')
 
-        if not username or not password:
-            return jsonify({"message": "Username and password required"}), 400
+        if not email or not password:
+            return {'message': 'Email and password are required'}, 400
 
-        response = requests.post(AUTH_API_URL, json={
-            "email": username,
-            "password": password
-        })
-
-        if response.status_code == 200:
-            user_data = response.json()
-            token = jwt.encode(
-                {
-                    "user_id": user_data["UserID"],
-                    "role": user_data["UserRole"],
-                    "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=1),
-                },
-                SECRET_KEY,
-                algorithm="HS256",
+        try:
+            response = requests.post(5
+                AUTH_API_URL,
+                json={"email": email, "password": password},
+                headers={"Content-Type": "application/json"}
             )
-            return jsonify({
-                "message": "Login successful",
-                "token": token
-            }), 200
-        else:
-            return jsonify({"message": "Invalid credentials"}), response.status_code
+
+            if response.status_code == 200:
+                try:
+                    auth_response = response.json()
+                    if isinstance(auth_response, list) and len(auth_response) >= 2 and auth_response[0] == "Verified":
+                        verified_status = auth_response[1]
+                        token = jwt.encode(
+                            {
+                                "email": email,
+                                "role": "Admin" if verified_status == "True" else "User",
+                                "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=1),
+                            },
+                            SECRET_KEY,
+                            algorithm="HS256",
+                        )
+
+                        return {
+                            "message": "Login successful",
+                            "verified": verified_status == "True",
+                            "token": token
+                        }, 200
+
+                    else:
+                        return {"message": "Unexpected API response format", "response_content": auth_response}, 500
+
+                except ValueError:
+                    return {"message": "Invalid JSON response from Auth API"}, 500
+
+            else:
+                return {
+                    "message": f"Authentication failed with status code {response.status_code}",
+                    "response_text": response.text
+                }, response.status_code
+
+        except requests.RequestException as e:
+            return {"message": f"Error connecting to Auth API: {str(e)}"}, 500
 
 
 @users_ns.route('')
@@ -209,7 +229,7 @@ class Feature(Resource):
 
     @features_ns.expect(feature_model)
     @features_ns.doc('update_feature', security='BearerAuth')
-    @token_required
+    @token_required5
     @role_required('Admin')
     def put(self, feature_id):
         return views.update_feature(feature_id)

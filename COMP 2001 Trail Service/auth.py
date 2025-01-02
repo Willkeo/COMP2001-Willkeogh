@@ -5,30 +5,30 @@ import datetime
 
 SECRET_KEY = "COMP2001"
 
-def token_required(func):
-    @wraps(func)
-    def wrapper(*args, **kwargs):
+def token_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
         token = request.headers.get('Authorization')
         if not token:
-            return {"message": "Token is missing"}, 401
-
+            return {'message': 'Token is missing'}, 401
         try:
-            decoded_token = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+            token = token.replace('Bearer ', '')
+            data = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+            request.user_data = data
         except jwt.ExpiredSignatureError:
-            return {"message": "Token has expired"}, 401
+            return {'message': 'Token has expired'}, 401
         except jwt.InvalidTokenError:
-            return {"message": "Invalid token"}, 401
+            return {'message': 'Invalid token'}, 401
+        return f(*args, **kwargs)
+    return decorated
 
-        request.user_id = decoded_token.get("user_id")
-        return func(*args, **kwargs)
+def role_required(role):
+    def wrapper(f):
+        @wraps(f)
+        def decorated(*args, **kwargs):
+            user_data = getattr(request, 'user_data', None)
+            if not user_data or user_data.get('role') != role:
+                return {'message': 'Unauthorized, insufficient role'}, 403
+            return f(*args, **kwargs)
+        return decorated
     return wrapper
-
-def role_required(required_role):
-    def decorator(func):
-        @wraps(func)
-        def wrapper(*args, **kwargs):
-            if request.user_role != required_role:
-                return {"message": "No permission"}, 403
-            return func(*args, **kwargs)
-        return wrapper
-    return decorator
