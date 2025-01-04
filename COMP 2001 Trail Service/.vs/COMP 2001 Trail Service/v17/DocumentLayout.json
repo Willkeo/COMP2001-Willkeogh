@@ -29,7 +29,7 @@
       "VerticalTabListWidth": 256,
       "DocumentGroups": [
         {
-          "DockedHeight": 363,
+          "DockedHeight": 101,
           "SelectedChildIndex": 4,
           "Children": [
             {
@@ -43,8 +43,7 @@
               "ViewState": "AgIAAAAAAAAAAAAAAAAAACEAAAASAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
               "WhenOpened": "2024-12-29T16:56:05.447Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Document",
@@ -56,8 +55,7 @@
               "RelativeToolTip": "COMP_2001_Trail_Service\\models.py",
               "ViewState": "AgIAABQAAAAAAAAAAAAwwCYAAAAqAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
-              "WhenOpened": "2025-01-01T15:19:14.172Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-01-01T15:19:14.172Z"
             },
             {
               "$type": "Document",
@@ -69,8 +67,7 @@
               "RelativeToolTip": "COMP_2001_Trail_Service\\views.py",
               "ViewState": "AgIAALEAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
-              "WhenOpened": "2025-01-01T15:18:48.121Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-01-01T15:18:48.121Z"
             },
             {
               "$type": "Document",
@@ -92,7 +89,7 @@
               "RelativeDocumentMoniker": "runserver.py",
               "ToolTip": "C:\\Users\\Willk\\Documents\\GitHub\\COMP2001-Willkeogh\\COMP 2001 Trail Service\\runserver.py",
               "RelativeToolTip": "runserver.py",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAOMAAAAyAAAAAAAAAA==",
+              "ViewState": "AgIAAOIAAAAAAAAAAAAwwOwAAAA9AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
               "WhenOpened": "2024-12-14T17:07:23.541Z",
               "EditorCaption": ""
@@ -100,7 +97,7 @@
           ]
         },
         {
-          "DockedHeight": 37,
+          "DockedHeight": 299,
           "SelectedChildIndex": -1,
           "Children": [
             {

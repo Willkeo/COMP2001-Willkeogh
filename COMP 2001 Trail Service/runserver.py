@@ -94,7 +94,7 @@ class Login(Resource):
             return {'message': 'Email and password are required'}, 400
 
         try:
-            response = requests.post(5
+            response = requests.post(
                 AUTH_API_URL,
                 json={"email": email, "password": password},
                 headers={"Content-Type": "application/json"}
@@ -229,7 +229,7 @@ class Feature(Resource):
 
     @features_ns.expect(feature_model)
     @features_ns.doc('update_feature', security='BearerAuth')
-    @token_required5
+    @token_required
     @role_required('Admin')
     def put(self, feature_id):
         return views.update_feature(feature_id)
