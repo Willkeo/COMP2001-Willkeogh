@@ -246,13 +246,7 @@ class Views(Resource):
     def get(self):
         return views.get_all_views()
 
-if __name__ == '__main__':
-    from os import environ 
-    HOST = environ.get('SERVER_HOST', 'localhost')
-    try:
-        PORT = int(environ.get('SERVER_PORT', '8000'))
-    except ValueError:
-        PORT = 8000
-    app.run(HOST, PORT)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8000)
 
 
